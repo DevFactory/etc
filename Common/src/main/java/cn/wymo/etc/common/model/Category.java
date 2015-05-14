@@ -1,17 +1,18 @@
 package cn.wymo.etc.common.model;
 
 public enum Category {
-	CATEGORY_TEMPERATURE_AIR("temperature_air", "空气温度", "%.1f", "°C", TemperatureAir.class, 10, 10, -20, 50, 0.1, 1, 0),
-	CATEGORY_TEMPERATURE_SOIL("temperature_soil", "土壤温度", "%.1f", "°C", TemperatureSoil.class, 10, 10, -20, 50, 0.1, 1, 0),
-	CATEGORY_HUMIDITY("humidity", "空气湿度", "%.1f", "%RH", Humidity.class, 10, 10, 0, 100, 0.1, 1, 0),
-	CATEGORY_LUMINATION("lumination", "环境照度", "%.1f", "Lux", Lumination.class, -1, -1, 0, 200000, 1, 0, 0),
-	CATEGORY_MOISTURE("moisture", "土壤水分", "%.1f", "%", Moisture.class, 10, 10, 0, 100, 0.1, 1, 0),
-	CATEGORY_DUST("dust", "粉尘浓度", "%.0f", "K�?283ml", Humidity.class, 1, 1, 0, 10, 1, 0, -1),
-	CATEGORY_PH("ph", "土壤pH值", "%.1f", "", PH.class, 7, 7, 0, 14.9, 0.1, 1, 0),
-	CATEGORY_O2("o2", "氧气含量", "%.1f", "%", O2.class, 10, 10, 0, 100, 0.1, 1, 1),
-	CATEGORY_CO2("co2", "二氧化碳含量", "%.0f", "ppm", CO2.class, 500, 500, 0, 2000, 1, 0, -1),
-	CATEGORY_NH3("nh3", "氨气含量", "%.0f", "ppm", NH3.class, 10, 10, 0, 100, 1, 0, -1);
+	CATEGORY_TEMPERATURE_AIR(0x00100000, "temperature_air", "空气温度", "%.1f", "°C", TemperatureAir.class, 10, 10, -20, 50, 0.1, 1, 0),
+	CATEGORY_TEMPERATURE_SOIL(0x00700000, "temperature_soil", "土壤温度", "%.1f", "°C", TemperatureSoil.class, 10, 10, -20, 50, 0.1, 1, 0),
+	CATEGORY_HUMIDITY(0x00200000, "humidity", "空气湿度", "%.1f", "%RH", Humidity.class, 10, 10, 0, 100, 0.1, 1, 0),
+	CATEGORY_LUMINATION(0x00300000, "lumination", "环境照度", "%.1f", "Lux", Lumination.class, -1, -1, 0, 200000, 1, 0, 0),
+	CATEGORY_MOISTURE(0x00800000, "moisture", "土壤水分", "%.1f", "%", Moisture.class, 10, 10, 0, 100, 0.1, 1, 0),
+	CATEGORY_DUST(0x00400000, "dust", "粉尘浓度", "%.0f", "K�?283ml", Humidity.class, 1, 1, 0, 10, 1, 0, -1),
+	CATEGORY_PH(0x00900000, "ph", "土壤pH值", "%.1f", "", PH.class, 7, 7, 0, 14.9, 0.1, 1, 0),
+	CATEGORY_O2(0x00500000, "o2", "氧气含量", "%.1f", "%", O2.class, 10, 10, 0, 100, 0.1, 1, 1),
+	CATEGORY_CO2(0x00600000, "co2", "二氧化碳含量", "%.0f", "ppm", CO2.class, 500, 500, 0, 2000, 1, 0, -1),
+	CATEGORY_NH3(0x00A00000, "nh3", "氨气含量", "%.0f", "ppm", NH3.class, 10, 10, 0, 100, 1, 0, -1);
 
+	private final int mask;
 	private final String name;
 	private final String title;
 	private final String formatter;
@@ -25,7 +26,8 @@ public enum Category {
     private final Class<? extends Data> klass;
     private int polar;
 	
-    private Category(final String name, 
+    private Category(final int mask, 
+    		final String name, 
     		final String title,
     		final String formatter,
     		final String unit,
@@ -37,6 +39,7 @@ public enum Category {
     		double delta,
     		int scale,
     		int polar) {
+    	this.mask = mask;
     	this.name = name;
     	this.klass = klass;
     	this.unit = unit;
@@ -53,6 +56,10 @@ public enum Category {
     
     public String getName() {
         return name;
+    }
+    
+    public int getMask() {
+        return mask;
     }
     
     public String getTitle() {

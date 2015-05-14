@@ -36,10 +36,13 @@
 	</issueManagement>
 	
   <modules>
-  	<module>Mobile</module>
   	<module>Broker</module>
   	<module>Generator</module>
   	<module>Dealer</module>
     <module>Common</module>
+    <module>VendorUI</module>
+    <module>AdminUI</module>
+    <module>ProducerUI</module>
+    <module>ConsumerUI</module>
   </modules>
 </project>

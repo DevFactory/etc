@@ -4,11 +4,16 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
+import org.reflections.Reflections;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Context;
-
 /**
  * Hello world!
  *
@@ -21,6 +26,7 @@ public class App {
 		System.out.println(" Data message dealer in ETC (Elastic Tracing Cloud)");
 		System.out.println(" -H, --host=<hostname>     Specify host name/IP to request data messages (default:localhost).");
 		System.out.println(" -p, --port=<port>         Specify port to request data messages (default:5679).");
+		System.out.println(" -i, --init                Initialize the database.");
 		System.out.println(" -h, --help                Print this help and exit.");
 		System.exit(0);
 	}
@@ -28,20 +34,25 @@ public class App {
 	public static void main( String[] args ) {
 		String host = "localhost";
 		int port = 5679;
-		
+		boolean init = false;
+		List<IDataProcessor> processors = new ArrayList<IDataProcessor>();
 		int c;
-		LongOpt[] options = new LongOpt[3];		
+		LongOpt[] options = new LongOpt[4];		
 		options[0] = new LongOpt("help",   LongOpt.NO_ARGUMENT, null, 'h');
 		options[1] = new LongOpt("host",   LongOpt.OPTIONAL_ARGUMENT, null, 'H');
 		options[2] = new LongOpt("port",   LongOpt.OPTIONAL_ARGUMENT, null, 'p');
+		options[3] = new LongOpt("init",   LongOpt.NO_ARGUMENT, null, 'i');
 		
-		Getopt g = new Getopt("etc-dealer", args, "H:p:h;", options);
+		Getopt g = new Getopt("etc-dealer", args, "H:p:ih;", options);
 		g.setOpterr(false); // We'll do our own error handling
 		
 		while ((c = g.getopt()) != -1) {
 			switch (c) {
 				case 'h':
 					usage();
+					break;
+				case 'i':
+					init = true;
 					break;
 				case 'H':
 					host = g.getOptarg();
@@ -54,6 +65,45 @@ public class App {
 			}
 		}
 		
+		Reflections reflections = new Reflections("cn.wymo.etc.dealer.processors");
+		Set<Class<? extends IDataProcessor>> allElemClasses = reflections.getSubTypesOf(IDataProcessor.class);
+		int i;
+		for(i = g.getOptind(); i < args.length ; i++) {
+			boolean found = false;
+			String elemClass = args[i];
+			Iterator<Class<? extends IDataProcessor>> it = allElemClasses.iterator();
+			while(it.hasNext()) {
+				Class<? extends Object> k = it.next();
+				if(IDataProcessor.class.isAssignableFrom(k) && elemClass.toLowerCase().equals(k.getSimpleName().toLowerCase())) {
+					try {
+						processors.add((IDataProcessor) k.newInstance());
+						found = true;
+					} catch (Exception e) {
+						logger.fatal(e.getMessage());
+					}
+				}
+			}
+			if(!found) {
+				logger.fatal(elemClass+" not found!");
+				break;
+			}
+		}
+		
+		if(init) {
+			if(i == args.length) {
+				Iterator<IDataProcessor> it = processors.iterator();
+				while(it.hasNext()) {
+					IDataProcessor processor = it.next();
+					System.out.println("Initializing "+processor.getClass().getSimpleName());
+					if(!processor.init()) {
+						logger.info("Failed to call init() of "+processor.getClass().getSimpleName());
+						break;
+					}
+				}
+			}
+			return;
+		}
+		
 		Context context = ZMQ.context(1);		
 		String socketAddr = "tcp://"+host+":"+port;
 		ZMQ.Socket socket = context.socket(ZMQ.REP);
@@ -64,7 +114,18 @@ public class App {
             //  Wait for next request from client (C string)
             String request = socket.recvStr(0);
             System.out.println(request);
-            //  Send reply back to client (C string)
+            Iterator<IDataProcessor> it = processors.iterator();
+            JSONObject input = new JSONObject(request);
+            while(it.hasNext()) {
+            	IDataProcessor processor = it.next();
+            	processor.setInput(input);
+            	processor.process();
+            	if(!processor.process()) {
+					logger.info("Failed to process init() of "+processor.getClass().getSimpleName());
+					break;
+				}
+            	input = processor.getOutput();
+            }
             socket.send(ByteBuffer.allocate(4).putInt(0).array());
         }
 	}

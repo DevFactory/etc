@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory>
+ <!-- <property name="connection.url">jdbc:mysql://pauldevel.mysql.rds.aliyuncs.com/esc</property> -->
+    <property name="connection.url">jdbc:mysql://127.0.0.1/etc</property>
+    <property name="connection.username">etc</property>
+    <property name="connection.password">etc</property>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="show_sql">false</property>
+    <property name="hbm2ddl.auto">update</property>
+  
+    <!-- JDBC connection pool (use the built-in) -->
+    <property name="connection.pool_size">10</property>
+    <property name="current_session_context_class">thread</property>
+ 
+	<mapping class="cn.wymo.etc.common.model.Gateway" />
+	<mapping class="cn.wymo.etc.common.model.Sensor" />
+	<mapping class="cn.wymo.etc.common.model.TemperatureAir" />
+	<mapping class="cn.wymo.etc.common.model.TemperatureSoil" />
+	<mapping class="cn.wymo.etc.common.model.Humidity" />
+	<mapping class="cn.wymo.etc.common.model.Moisture" />
+	<mapping class="cn.wymo.etc.common.model.PH" />
+	<mapping class="cn.wymo.etc.common.model.Dust" />
+	<mapping class="cn.wymo.etc.common.model.Lumination" />
+	<mapping class="cn.wymo.etc.common.model.O2" />
+	<mapping class="cn.wymo.etc.common.model.CO2" />
+	<mapping class="cn.wymo.etc.common.model.NH3" />
+
+</session-factory>
+</hibernate-configuration>
