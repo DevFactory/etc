@@ -2,23 +2,26 @@ package cn.wymo.etc.common.model;
 
 import java.sql.Timestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "tbl_gateway")
 public class Gateway {
-	@Id
+	@Id @GeneratedValue
 	@Column(name = "id")
-	long id;
-	@Column(name = "status")
-	String status;
-	@Column(name = "host")
-	String host = "192.168.100.230";
+	private int id;
+	@ManyToOne(cascade=CascadeType.ALL)
+	private Vendor vendor;
+	@Column(name = "product")
+	private int product;
 	@Column(name = "last_sync_at")
-	Timestamp last_sync_at;
+	private Timestamp last_sync_at;
 	
 	public Gateway() {
 		super();
@@ -29,20 +32,20 @@ public class Gateway {
 		this.id = id;
 	}
 
-	public String getStatus() {
-		return status;
+	public Vendor getVendor() {
+		return vendor;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setVendor(Vendor vendor) {
+		this.vendor = vendor;
 	}
 	
-	public String getHost() {
-		return host;
+	public int getProduct() {
+		return product;
 	}
 
-	public void setHost(String host) {
-		this.host = host;
+	public void setProduct(int product) {
+		this.product = product;
 	}
 	
 	public Timestamp getLastSyncAt() {
@@ -53,12 +56,8 @@ public class Gateway {
 		this.last_sync_at = last_sync_at;
 	}
 	
-	public long getId() {
+	public int getId() {
 		return id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
 	}
 	
 	@Override

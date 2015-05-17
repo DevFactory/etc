@@ -8,9 +8,8 @@
 		<artifactId>etc</artifactId>
 		<version>0.0.1</version>
 	</parent>
-	<groupId>cn.wymo</groupId>
+	<groupId>cn.wymo.etc</groupId>
 	<artifactId>Dealer</artifactId>
-	<version>0.0.1</version>
 	<name>Dealer</name>
 	<url>http://maven.apache.org</url>
 	<properties>

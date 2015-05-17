@@ -9,7 +9,6 @@
   </parent>
   <groupId>cn.wymo.etc</groupId>
   <artifactId>ProducerUI</artifactId>
-  <version>0.0.1</version>
   <name>ProducerUI</name>
   <url>http://maven.apache.org</url>
   <properties>

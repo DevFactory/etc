@@ -36,6 +36,7 @@
 	</issueManagement>
 	
   <modules>
+  	<module>Installer</module>
   	<module>Broker</module>
   	<module>Generator</module>
   	<module>Dealer</module>

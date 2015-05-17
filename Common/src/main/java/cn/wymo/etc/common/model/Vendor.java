@@ -13,7 +13,7 @@ import javax.persistence.Table;
 public class Vendor {
 	@Id @GeneratedValue
 	@Column(name = "id")
-	private long id;
+	private int id;
 	@Column(name = "name")
 	String name;
 	@Column(name = "description")
@@ -55,7 +55,7 @@ public class Vendor {
 		this.created_at = created_at;
 	}
 	
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 	

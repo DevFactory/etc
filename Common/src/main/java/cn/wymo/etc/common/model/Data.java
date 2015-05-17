@@ -20,13 +20,13 @@ import org.apache.commons.collections.Transformer;
 public class Data implements Comparable<Data> {
 	@Id @GeneratedValue
 	@Column(name = "id")
-	long id;
+	private long id;
 	@Column(name = "created_at")
-	Timestamp created_at;
+	private Timestamp created_at;
 	@ManyToOne(cascade=CascadeType.ALL)
-	Sensor sensor;
+	private Sensor sensor;
 	@Column(name = "value")
-	double value;
+	private double value;
 	
 	static public Transformer DATA_TO_NUMBER = new Transformer() {
 		public Object transform(Object obj) {
