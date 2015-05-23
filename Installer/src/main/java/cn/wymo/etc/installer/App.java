@@ -3,6 +3,7 @@ package cn.wymo.etc.installer;
 import java.io.Console;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -10,7 +11,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import cn.wymo.etc.common.model.Administrator;
+import cn.wymo.etc.common.model.Assignment;
+import cn.wymo.etc.common.model.Role;
+import cn.wymo.etc.common.model.User;
+
 /**
  * Hello world!
  *
@@ -93,6 +97,7 @@ public class App
 	        cfg.setProperty("hibernate.connection.password", password);
 	        cfg.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
 	        try {
+	        	Iterator<Assignment> it;
 	        	SessionFactory sf = cfg.buildSessionFactory();
 	        	Session session = sf.openSession();
 				Transaction tx = session.beginTransaction();
@@ -130,7 +135,8 @@ public class App
 						}
 					}
 					
-					Administrator admin = new Administrator();
+					User admin = new User();
+					admin.addAssignment(Role.ADMINISTRATOR);
 					
 					MessageDigest messageDigest;
 					try {
@@ -139,10 +145,57 @@ public class App
 						admin.setUname(user);
 						admin.setPassword(messageDigest.digest());
 						session.save(admin);
+						it = admin.getAssignments().iterator();
+						while(it.hasNext()) {
+							session.save(it.next());
+						}
 					} catch (NoSuchAlgorithmException e) {
 						e.printStackTrace();
 					}
 		        }
+				
+				MessageDigest messageDigest = null;
+				try {
+					messageDigest = MessageDigest.getInstance("SHA1");
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}
+				
+				if(messageDigest != null) {
+					User a = new User();
+					a.setUname("a");
+					a.addAssignment(Role.ADMINISTRATOR);
+					messageDigest.update("a".getBytes());
+					a.setPassword(messageDigest.digest());
+					session.save(a);
+					it = a.getAssignments().iterator();
+					while(it.hasNext()) {
+						session.save(it.next());
+					}
+					
+					User v = new User();
+					v.setUname("v");
+					v.addAssignment(Role.VENDOR);
+					messageDigest.update("v".getBytes());
+					v.setPassword(messageDigest.digest());
+					session.save(v);
+					it = v.getAssignments().iterator();
+					while(it.hasNext()) {
+						session.save(it.next());
+					}
+					
+					
+					User u = new User();
+					u.setUname("u");
+					messageDigest.update("u".getBytes());
+					u.setPassword(messageDigest.digest());
+					session.save(u);
+					it = u.getAssignments().iterator();
+					while(it.hasNext()) {
+						session.save(it.next());
+					}
+				}
+
 				tx.commit();
 				session.close();
 				sf.close();

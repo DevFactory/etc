@@ -1,0 +1,12 @@
+@mixin common {
+	.nav-no-title {
+		.v-touchkit-navbar {
+			display:none !important;
+			height:0 !important;
+		}
+		
+		.v-touchkit-navview-wrapper {
+			top:0 !important;
+		}
+	}
+}

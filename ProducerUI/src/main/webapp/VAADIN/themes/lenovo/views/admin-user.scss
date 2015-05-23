@@ -1,0 +1,11 @@
+@mixin admin-user {
+    .user-avater {
+		border-radius:50%; 
+		overflow:hidden;
+	}
+	
+	.toolbar .button {
+		background:#025BAB;
+    	color:#fff;
+	}
+}

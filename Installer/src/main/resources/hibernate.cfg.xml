@@ -27,9 +27,6 @@
 	<mapping class="cn.wymo.etc.common.model.NH3" />
 	<mapping class="cn.wymo.etc.common.model.Vendor" />
 	<mapping class="cn.wymo.etc.common.model.User" />
-	<mapping class="cn.wymo.etc.common.model.Administrator" />
-	<mapping class="cn.wymo.etc.common.model.Guest" />
-	<mapping class="cn.wymo.etc.common.model.Producer" />
-	<mapping class="cn.wymo.etc.common.model.VendorUser" />
+	<mapping class="cn.wymo.etc.common.model.Assignment" />
 </session-factory>
 </hibernate-configuration>

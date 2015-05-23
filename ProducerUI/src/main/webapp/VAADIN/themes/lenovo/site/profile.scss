@@ -1,0 +1,48 @@
+@mixin profile {
+	.profileview {
+		@include valo-button;
+		.v-button {
+			margin:0px auto !important;
+		}
+		
+		.v-button-wrap {
+	    	margin:0px auto;
+	    	display: inline-block !important;
+	    	font-size:20px;
+			overflow: hidden;
+	    }
+	    
+	    .header {
+	    	margin-top: 0 !important;
+	    	margin-bottom: 20px !important;
+	    	height:70px !important;
+	    	width:100%;
+	    	@include radial-gradient(circle at 50% 50%, scale-color($v-app-background-color, $lightness: -2%), scale-color($v-app-background-color, $lightness: -2% - valo-gradient-opacity()), $fallback: $v-app-background-color);
+	    	
+	    	.info {
+	    		width: 70%;
+	    		height:50px !important;
+	    		margin: 5px 20px !important;
+	    		color: #fff !important;
+	    	}
+	    	
+	    	.photo {
+	    		position:absolute;
+	    		top:20px;
+	    		right:20px;
+	    		
+	    		.v-caption {
+	        		height: 0 !important;
+	        		width: 0 !important;
+	        	}
+				
+				img {
+					margin: 0;
+					border-radius:50%; 
+					overflow:hidden;
+					border: 2px solid $v-app-background-color;
+				}
+	    	}
+        }
+	}
+}
